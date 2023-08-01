@@ -15,7 +15,6 @@ const Addition = () => {
     setShowStartDialog(true);
   }, []);
   
-
   const generateTriangle = () => {
     if (!hasShownAddRowDialog) {
       setShowAddRowDialog(true); // Show the Add Row dialog
@@ -38,6 +37,8 @@ const Addition = () => {
       if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1]+updatedRows[rowIndex-1][colIndex]) {
         // Match found, set the background color to green
         updatedRows[rowIndex][colIndex] = existingValue + value;
+        // const myDivElement = document.getElementById('box');
+        // myDivElement.backgroundColor = 'green';
         
       } else {
 
@@ -85,14 +86,19 @@ const Addition = () => {
     // const isActive = (colIndex === 0 || colIndex === rowIndex);
     // const backgroundColor = isActive ? 'green' : 'red';
     // const opacity = isDragging ? 0.5 : 1;
-    console.log("return : "+backgroundColor)
+    // console.log("return : "+backgroundColor)
     return (
        
-      <span
+      <span id='box'
         ref={(node) => {
           drag(drop(node));
         }}
-        className={`inline-block bg-${backgroundColor}-400 p-2 m-3`}
+        className={`inline-block text-xl font-semibold bg-${backgroundColor}-400 p-2 mx-1`}
+        style={{
+          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+          width: "50px", // Adjust the width and height to your desired size
+          height: "50px",
+        }}
         // className={`inline-block bg-yellow-400 p-2 m-3`}
         // style={{ opacity }}
       >
