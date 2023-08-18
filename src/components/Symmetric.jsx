@@ -65,6 +65,7 @@ const Symmetric = () => {
               clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
               width: "50px", // Adjust the width and height to your desired size
               height: "50px",
+              backgroundColor:backgroundColor
             }}
           >
             {value}
