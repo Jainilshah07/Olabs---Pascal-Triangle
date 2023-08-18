@@ -9,6 +9,9 @@ const Addition = () => {
   const [showAddRowDialog, setShowAddRowDialog] = useState(false);
   const [hasShownAddRowDialog, setHasShownAddRowDialog] = useState(false);
   const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
+  const [boxBackgroundColors, setBoxBackgroundColors] = useState(
+    rows.map((row) => row.map(() => 'yellow'))
+  );
 
   useEffect(() => {
     // Show the start dialog initially
@@ -24,6 +27,11 @@ const Addition = () => {
     const newRow = new Array(lastRow.length + 1).fill(0);
     newRow[0] = 1;
     newRow[lastRow.length] = 1;
+
+    // Initialize boxBackgroundColors for the new row
+    const newColors = [...boxBackgroundColors, new Array(newRow.length).fill('yellow')];
+    setBoxBackgroundColors(newColors);
+
     setRows([...rows, newRow]);
   };
 
@@ -31,37 +39,38 @@ const Addition = () => {
   const handleDrop = (rowIndex, colIndex, value) => {
     const updatedRows = [...rows];
     const existingValue = updatedRows[rowIndex][colIndex];
+    const newColors = [...boxBackgroundColors];
     if (existingValue === 0) {
       updatedRows[rowIndex][colIndex] = value;
     } else {
-      if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1]+updatedRows[rowIndex-1][colIndex]) {
+      if(existingValue + value === updatedRows[rowIndex - 1][colIndex - 1] + updatedRows[rowIndex - 1][colIndex]) {
         // Match found, set the background color to green
         updatedRows[rowIndex][colIndex] = existingValue + value;
-        // const myDivElement = document.getElementById('box');
-        // myDivElement.backgroundColor = 'green';
-        const myDivElement = document.getElementById(`box-${rowIndex}-${colIndex}`);
-        console.log("mydiv: ",myDivElement.style.backgroundColor)
-        if (myDivElement) {
-          myDivElement.style.backgroundColor = 'green';
-        }
-        
+        // Update the background color state to green
+        newColors[rowIndex][colIndex] = 'green';
       } else {
-
         updatedRows[rowIndex][colIndex] = 0;
+        newColors[rowIndex][colIndex] = 'yellow';
+        
         setShowWrongAnswerDialog(true); // Show wrong answer dialog
         setTimeout(() => {
           setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
-        }, 2000);
+        }, 1000);
       }
     }
+    setBoxBackgroundColors(newColors);
     setRows(updatedRows);
   };
+  
+  
 
 
   const Box = ({ value, rowIndex, colIndex }) => {
-    let backgroundColor = 'yellow';
+    // let backgroundColor = 'yellow';
+    let backgroundColor = boxBackgroundColors[rowIndex][colIndex];
+    console.log(`rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
     if(value===1 && (colIndex===0 || colIndex===rowIndex)){
-      backgroundColor='green'
+        boxBackgroundColors[rowIndex][colIndex]='green'
       console.log(backgroundColor)
     }
 
@@ -94,27 +103,22 @@ const Addition = () => {
     // const opacity = isDragging ? 0.5 : 1;
     // console.log("return : "+backgroundColor)
     return (
-       
-      <span 
-        // id='box'
-        id={`box-${rowIndex}-${colIndex}`} // Add an id to target the specific box
-        ref={(node) => {
-          drag(drop(node));
-        }}
-        className={`inline-block text-xl font-semibold bg-${backgroundColor}-400 p-2 mx-1`}
-        style={{
-          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-          width: "50px", // Adjust the width and height to your desired size
-          height: "50px",
-          backgroundColor: backgroundColor, // Set the background color here
-        }}
-        // className={`inline-block bg-yellow-400 p-2 m-3`}
-        // style={{ opacity }}
-      >
-        {value}
-      </span>
-      
-    );
+        <span
+          ref={(node) => {
+            drag(drop(node));
+          }}
+          className={`inline-block text-xl font-semibold bg-${boxBackgroundColors[rowIndex][colIndex]}-400 p-2 mx-1`}
+          style={{
+            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+            width: "50px", // Adjust the width and height to your desired size
+            height: "50px",
+            backgroundColor:boxBackgroundColors[rowIndex][colIndex]
+            
+          }}
+        >
+          {value}
+        </span>
+      );
   };
 
   return (
