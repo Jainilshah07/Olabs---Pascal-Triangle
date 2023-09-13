@@ -14,7 +14,7 @@ const Addition = () => {
     // Show the start dialog initially
     setShowStartDialog(true);
   }, []);
-  
+
   const generateTriangle = () => {
     if (!hasShownAddRowDialog) {
       setShowAddRowDialog(true); // Show the Add Row dialog
@@ -34,17 +34,17 @@ const Addition = () => {
     if (existingValue === 0) {
       updatedRows[rowIndex][colIndex] = value;
     } else {
-      if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1]+updatedRows[rowIndex-1][colIndex]) {
+      if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1] + updatedRows[rowIndex - 1][colIndex]) {
         // Match found, set the background color to green
         updatedRows[rowIndex][colIndex] = existingValue + value;
         // const myDivElement = document.getElementById('box');
         // myDivElement.backgroundColor = 'green';
         const myDivElement = document.getElementById(`box-${rowIndex}-${colIndex}`);
-        console.log("mydiv: ",myDivElement.style.backgroundColor)
+        console.log("mydiv: ", myDivElement.style.backgroundColor)
         if (myDivElement) {
           myDivElement.style.backgroundColor = 'green';
         }
-        
+
       } else {
 
         updatedRows[rowIndex][colIndex] = 0;
@@ -60,8 +60,8 @@ const Addition = () => {
 
   const Box = ({ value, rowIndex, colIndex }) => {
     let backgroundColor = 'yellow';
-    if(value===1 && (colIndex===0 || colIndex===rowIndex)){
-      backgroundColor='green'
+    if (value === 1 && (colIndex === 0 || colIndex === rowIndex)) {
+      backgroundColor = 'green'
       console.log(backgroundColor)
     }
 
@@ -72,13 +72,13 @@ const Addition = () => {
         isDragging: monitor.isDragging()
       })
     }));
-    
+
 
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
       accept: 'box',
       drop: (item) => {
-        if (rowIndex - 1 === item.rowIndex) { 
-          if(colIndex -1 === item.colIndex || colIndex === item.colIndex){
+        if (rowIndex - 1 === item.rowIndex) {
+          if (colIndex - 1 === item.colIndex || colIndex === item.colIndex) {
             handleDrop(rowIndex, colIndex, item.value);
           }
         }
@@ -94,8 +94,8 @@ const Addition = () => {
     // const opacity = isDragging ? 0.5 : 1;
     // console.log("return : "+backgroundColor)
     return (
-       
-      <span 
+
+      <span
         // id='box'
         id={`box-${rowIndex}-${colIndex}`} // Add an id to target the specific box
         ref={(node) => {
@@ -108,68 +108,95 @@ const Addition = () => {
           height: "50px",
           backgroundColor: backgroundColor, // Set the background color here
         }}
-        // className={`inline-block bg-yellow-400 p-2 m-3`}
-        // style={{ opacity }}
+      // className={`inline-block bg-yellow-400 p-2 m-3`}
+      // style={{ opacity }}
       >
         {value}
       </span>
-      
+
     );
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <h1 className='text-center text-4xl mt-6'>Addition Property</h1>
-      <div className="text-center mt-8">
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex}>
-            {row.map((value, colIndex) => (
-              <Box key={colIndex} value={value} rowIndex={rowIndex} colIndex={colIndex} />
+      <div className='grid grid-cols-3 '>
+        <div className='px-4 border-x-8 h-screen items-center'>
+          <h1 className='font-semibold text-2xl pt-2'>Instructions</h1>
+          <br />
+          <span className='font-semibold text-lg'>
+            1) Click on the Add Row button to generate a new Row
+            <br />
+            2) To obtain the number for the yellow hexagon
+          </span>
+
+          <span className='font-semibold text-lg'>
+            <li>
+              Add the number directly above and to the left of the number with the number above and to the right of it.
+            </li>
+            <li>
+              If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
+            </li>
+          </span>
+
+        </div>
+        <div>
+          <h1 className='text-center text-4xl mt-6'>Addition Property</h1>
+          <div className="text-center mt-8 ">
+            {rows.map((row, rowIndex) => (
+              <div key={rowIndex}>
+                {row.map((value, colIndex) => (
+                  <Box key={colIndex} value={value} rowIndex={rowIndex} colIndex={colIndex} />
+                ))}
+              </div>
             ))}
+            <button className="bg-green-200 rounded-full p-2 m-2" onClick={generateTriangle}>
+              Add Row
+            </button>
           </div>
-        ))}
-        <button className="bg-green-200 rounded-full p-2 m-2" onClick={generateTriangle}>
-          Add Row
-        </button>
+          {showStartDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Welcome!</h1>
+                <p>Start the construction of the triangle by clicking the "Add Row" button.</p>
+                <button
+                  className="bg-green-200 rounded-full p-2 mt-4"
+                  onClick={() => setShowStartDialog(false)}
+                >
+                  Start
+                </button>
+              </div>
+            </div>
+          )}
+          {showAddRowDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Fill Number</h1>
+                <p>Use the addition property by dragging and dropping the appropriate numbers from above row to fill the empty boxes.</p>
+                <button
+                  className="bg-green-200 rounded-full p-2 mt-4"
+                  onClick={() => setShowAddRowDialog(false)}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          )}
+          {showWrongAnswerDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
+                <p>The answer you filled is incorrect. Please try again.</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      {showStartDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Welcome!</h1>
-              <p>Start the construction of the triangle by clicking the "Add Row" button.</p>
-              <button
-                className="bg-green-200 rounded-full p-2 mt-4"
-                onClick={() => setShowStartDialog(false)}
-              >
-                Start
-              </button>
-            </div>
-          </div>
-        )}
-        {showAddRowDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Fill Number</h1>
-              <p>Use the addition property by dragging and dropping the appropriate numbers from above row to fill the empty boxes.</p>
-              <button
-                className="bg-green-200 rounded-full p-2 mt-4"
-                onClick={() => setShowAddRowDialog(false)}
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        )}
-        {showWrongAnswerDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-              <p>The answer you filled is incorrect. Please try again.</p>
-            </div>
-          </div>
-      )}
+
+
+
+
     </DndProvider>
-    
+
   );
 };
 

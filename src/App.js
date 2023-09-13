@@ -7,10 +7,10 @@ import SymmetricState from "./components/SymmetricState";
 function App() {
   return (
     <div className="App">
-        {/* <Addition /> */}
-        {/* <AdditionState/> */}
-        <SymmetricState/>
-        {/* <Symmetric/> */}
+      {/* <Addition /> */}
+      {/* <AdditionState /> */}
+      <SymmetricState />
+      {/* <Symmetric /> */}
     </div>
   );
 }

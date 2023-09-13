@@ -23,28 +23,28 @@ const Symmetric = () => {
   const handleDrop = (rowIndex, colIndex, value) => {
     const updatedRows = [...rows];
     const existingValue = updatedRows[rowIndex][colIndex];
-    
+
     if (existingValue === 0) {
       updatedRows[rowIndex][colIndex] = value;
-    //   if (colIndex > rows.length / 2) {
-    //     console.log("entry")
-    //     // Update the background color state to green
-    //     const newColors = [...boxBackgroundColors];
-    //     newColors[rowIndex][colIndex] = 'green';
-    //     setBoxBackgroundColors(newColors);
-    //   }
+      //   if (colIndex > rows.length / 2) {
+      //     console.log("entry")
+      //     // Update the background color state to green
+      //     const newColors = [...boxBackgroundColors];
+      //     newColors[rowIndex][colIndex] = 'green';
+      //     setBoxBackgroundColors(newColors);
+      //   }
       const newColors = [...boxBackgroundColors];
       newColors[rowIndex][colIndex] = 'green';
       setBoxBackgroundColors(newColors);
     }
-    
+
     setRows(updatedRows);
   };
 
   const Box = ({ value, rowIndex, colIndex }) => {
     const backgroundColor = boxBackgroundColors[rowIndex][colIndex];
-    if(colIndex < rows.length/2){
-        boxBackgroundColors[rowIndex][colIndex]='green';
+    if (colIndex < rows.length / 2) {
+      boxBackgroundColors[rowIndex][colIndex] = 'green';
     }
     const [{ isDragging }, drag] = useDrag(() => ({
       type: 'box',
@@ -90,19 +90,44 @@ const Symmetric = () => {
   return (
     <div>
       <DndProvider backend={HTML5Backend}>
-        <h1 className='text-center text-4xl mt-6'>Symmetric/Mirror Property</h1>
-        <div className='text-center mt-8'>
-          {rows.map((row, rowIndex) => (
-            <div key={rowIndex}>
-              {row.map((value, colIndex) => (
-                <Box key={colIndex} value={value} rowIndex={rowIndex} colIndex={colIndex} />
+        <div className='grid grid-cols-3 '>
+          <div className='px-4 border-x-8 h-screen items-center'>
+            <h1 className='font-semibold text-2xl pt-2'>Instructions</h1>
+            <br />
+            <span className='font-semibold text-lg'>
+              1) Click on the Add Row button to generate a new Row
+              <br />
+              2) To obtain the number for the yellow hexagon
+            </span>
+
+            <span className='font-semibold text-lg'>
+              <li>
+                Add the number directly above and to the left of the number with the number above and to the right of it.
+              </li>
+              <li>
+                If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
+              </li>
+            </span>
+
+          </div>
+          <div>
+            <h1 className='text-center text-4xl mt-6'>Symmetric/Mirror Property</h1>
+            <div className='text-center mt-8'>
+              {rows.map((row, rowIndex) => (
+                <div key={rowIndex}>
+                  {row.map((value, colIndex) => (
+                    <Box key={colIndex} value={value} rowIndex={rowIndex} colIndex={colIndex} />
+                  ))}
+                </div>
               ))}
+              <button className='bg-green-200 rounded-full p-2 m-2' onClick={generateTriangle}>
+                Add Row
+              </button>
             </div>
-          ))}
-          <button className='bg-green-200 rounded-full p-2 m-2' onClick={generateTriangle}>
-            Add Row
-          </button>
+          </div>
+
         </div>
+
       </DndProvider>
     </div>
   );
