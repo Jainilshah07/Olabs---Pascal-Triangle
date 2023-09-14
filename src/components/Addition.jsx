@@ -3,123 +3,63 @@ import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const Addition = () => {
-  const [rows, setRows] = useState([[1], [1, 1]]);
-  const [showStartDialog, setShowStartDialog] = useState(true);
-  const [showAddRowDialog, setShowAddRowDialog] = useState(false);
-  const [hasShownAddRowDialog, setHasShownAddRowDialog] = useState(false);
-  const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
+const Formulae = () => {
+  const [rows, setRows] = useState([]); // Initialize an empty triangle
 
   useEffect(() => {
-    // Show the start dialog initially
-    setShowStartDialog(true);
+    // Create a premade binomial triangle with 7 rows
+    const premadeTriangle = [
+      [1],
+      [1, 1],
+      [1, 2, 1],
+      [1, 3, 3, 1],
+      [1, 4, 6, 4, 1],
+      [1, 5, 10, 10, 5, 1],
+      [1, 6, 15, 20, 15, 6, 1],
+    ];
+    setRows(premadeTriangle);
   }, []);
-  
-  const generateTriangle = () => {
-    if (!hasShownAddRowDialog) {
-      setShowAddRowDialog(true); // Show the Add Row dialog
-      setHasShownAddRowDialog(true); // Set hasShownAddRowDialog to true
-    }
-    const lastRow = rows[rows.length - 1];
-    const newRow = new Array(lastRow.length + 1).fill(0);
-    newRow[0] = 1;
-    newRow[lastRow.length] = 1;
-    setRows([...rows, newRow]);
-  };
-
-
-  const handleDrop = (rowIndex, colIndex, value) => {
-    const updatedRows = [...rows];
-    const existingValue = updatedRows[rowIndex][colIndex];
-    if (existingValue === 0) {
-      updatedRows[rowIndex][colIndex] = value;
-    } else {
-      if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1]+updatedRows[rowIndex-1][colIndex]) {
-        // Match found, set the background color to green
-        updatedRows[rowIndex][colIndex] = existingValue + value;
-        // const myDivElement = document.getElementById('box');
-        // myDivElement.backgroundColor = 'green';
-        const myDivElement = document.getElementById(`box-${rowIndex}-${colIndex}`);
-        console.log("mydiv: ",myDivElement.style.backgroundColor)
-        if (myDivElement) {
-          myDivElement.style.backgroundColor = 'green';
-        }
-        
-      } else {
-
-        updatedRows[rowIndex][colIndex] = 0;
-        setShowWrongAnswerDialog(true); // Show wrong answer dialog
-        setTimeout(() => {
-          setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
-        }, 2000);
-      }
-    }
-    setRows(updatedRows);
-  };
-
 
   const Box = ({ value, rowIndex, colIndex }) => {
-    let backgroundColor = 'yellow';
-    if(value===1 && (colIndex===0 || colIndex===rowIndex)){
-      backgroundColor='green'
-      console.log(backgroundColor)
-    }
-
     const [{ isDragging }, drag] = useDrag(() => ({
-      type: 'box',
-      item: { value, rowIndex, colIndex },
+      type: 'coefficient',
+      item: { value },
       collect: (monitor) => ({
         isDragging: monitor.isDragging()
       })
     }));
-    
 
-    const [{ canDrop, isOver }, drop] = useDrop(() => ({
-      accept: 'box',
+    const [, drop] = useDrop(() => ({
+      accept: 'coefficient',
       drop: (item) => {
-        if (rowIndex - 1 === item.rowIndex) { 
-          if(colIndex -1 === item.colIndex || colIndex === item.colIndex){
-            handleDrop(rowIndex, colIndex, item.value);
-          }
-        }
-      },
-      collect: (monitor) => ({
-        canDrop: monitor.canDrop(),
-        isOver: monitor.isOver()
-      })
+        // Handle coefficient drop: update the triangle with the coefficient
+        const updatedRows = [...rows];
+        updatedRows[rowIndex][colIndex] = item.value;
+        setRows(updatedRows);
+      }
     }));
 
-    // const isActive = (colIndex === 0 || colIndex === rowIndex);
-    // const backgroundColor = isActive ? 'green' : 'red';
-    // const opacity = isDragging ? 0.5 : 1;
-    // console.log("return : "+backgroundColor)
     return (
-       
-      <span 
-        // id='box'
-        id={`box-${rowIndex}-${colIndex}`} // Add an id to target the specific box
+      <span
         ref={(node) => {
           drag(drop(node));
         }}
-        className={`inline-block text-xl font-semibold bg-${backgroundColor}-400 p-2 mx-1`}
+        className={`inline-block text-xl font-semibold bg-yellow-400 p-2 mx-1`}
         style={{
           clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-          width: "50px", // Adjust the width and height to your desired size
+          width: "50px",
           height: "50px",
-          backgroundColor: backgroundColor, // Set the background color here
+          backgroundColor: isDragging ? 'lightgray' : 'yellow',
         }}
-        // className={`inline-block bg-yellow-400 p-2 m-3`}
-        // style={{ opacity }}
       >
-        {value}
+        {value !== null ? value : ''}
       </span>
-      
     );
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <h1 className='text-center text-4xl mt-6'>Addition Property</h1>
+      <h1 className='text-center text-4xl mt-6'>Binomial Triangle</h1>
       <div className="text-center mt-8">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex}>
@@ -128,50 +68,16 @@ const Addition = () => {
             ))}
           </div>
         ))}
-        <button className="bg-green-200 rounded-full p-2 m-2" onClick={generateTriangle}>
-          Add Row
-        </button>
       </div>
-      {showStartDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Welcome!</h1>
-              <p>Start the construction of the triangle by clicking the "Add Row" button.</p>
-              <button
-                className="bg-green-200 rounded-full p-2 mt-4"
-                onClick={() => setShowStartDialog(false)}
-              >
-                Start
-              </button>
-            </div>
-          </div>
-        )}
-        {showAddRowDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Fill Number</h1>
-              <p>Use the addition property by dragging and dropping the appropriate numbers from above row to fill the empty boxes.</p>
-              <button
-                className="bg-green-200 rounded-full p-2 mt-4"
-                onClick={() => setShowAddRowDialog(false)}
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        )}
-        {showWrongAnswerDialog && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded">
-              <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-              <p>The answer you filled is incorrect. Please try again.</p>
-            </div>
-          </div>
-      )}
+      <div className="text-center mt-8">
+        <h2 className="text-2xl">(a + b)^2 =</h2>
+        {/* Display the expression with the filled coefficients here */}
+        <div className="text-4xl">
+          {`(${rows[2][0] !== null ? rows[2][0] : 'a'} + ${rows[2][1] !== null ? rows[2][1] : 'b'})^2`}
+        </div>
+      </div>
     </DndProvider>
-    
   );
 };
 
-
-export default Addition;
+export default Formulae;
