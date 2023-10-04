@@ -5,7 +5,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const BinomialTriangle = () => {
   const [rows, setRows] = useState([]); // Initialize an empty triangle
-  const [equation, setEquation] = useState(['', '', '']);
+  const [square, setSquare] = useState(['', '', '']);
+  const [cubic, setCubic] = useState(['', '', '', '']);
+  const [quart, setQuart] = useState(['', '', '', '', '']);
 
   useEffect(() => {
     // Create a premade binomial triangle with 7 rows
@@ -21,7 +23,7 @@ const BinomialTriangle = () => {
     setRows(premadeTriangle);
   }, []);
 
-  const CoefficientBox = ({ value, index }) => {
+  const SquareCoefficientBox = ({ value, index }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
       type: 'coefficient',
       item: { value },
@@ -35,16 +37,16 @@ const BinomialTriangle = () => {
       drop: (item) => {
         // Define the expected values for the specific row (rowIndex 2 for the power of 2)
         const expectedValues = [1,2,1];
-  
+
         // Check if the dropped value is in the expected values
         if (item.value === expectedValues[index]) {
           // Correct coefficient dropped, change color to green
           setBackgroundColor('green');
           // Update the equation with the correct value
-          const updatedEquation = [...equation];
+          const updatedEquation = [...square];
           updatedEquation[index] = item.value;
-          setEquation(updatedEquation);
-        } else {
+          setSquare(updatedEquation);
+        }else {
           // Incorrect coefficient dropped, do not change color
           setBackgroundColor('white');
         }
@@ -71,6 +73,115 @@ const BinomialTriangle = () => {
       </span>
     );
   };
+
+
+  const CubicCoefficientBox = ({ value, index }) => {
+    const [{ isDragging }, drag] = useDrag(() => ({
+      type: 'coefficient',
+      item: { value },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging()
+      })
+    }));
+  
+    const [, drop] = useDrop(() => ({
+      accept: 'number',
+      drop: (item) => {
+        // Define the expected values for the specific row (rowIndex 2 for the power of 2)
+        const expectedCubic = [1,3,3,1];
+
+        // Check if the dropped value is in the expected values
+        if (item.value === expectedCubic[index]) {
+          // Correct coefficient dropped, change color to green
+          setBackgroundColor('green');
+          // Update the equation with the correct value
+          const updatedEquation = [...cubic];
+          updatedEquation[index] = item.value;
+          setCubic(updatedEquation);
+        }else {
+          // Incorrect coefficient dropped, do not change color
+          setBackgroundColor('white');
+        }
+      }
+    }));
+  
+    const [backgroundColor, setBackgroundColor] = useState(value === '' ? 'white' : 'green'); // Set the initial color based on value
+  
+    return (
+      <span
+        ref={(node) => {
+          drag(node);
+          drop(node);
+        }}
+        className={`inline-block text-xl font-semibold bg-${backgroundColor}-400 p-2 mx-1`}
+        style={{
+          width: "50px",
+          height: "50px",
+          backgroundColor: isDragging ? 'lightgray' : backgroundColor,
+          border: "1px solid #000",
+        }}
+      >
+        {value !== '' ? value : ''}
+      </span>
+    );
+  };
+
+
+  const QuartCoefficientBox = ({ value, index }) => {
+    const [{ isDragging }, drag] = useDrag(() => ({
+      type: 'coefficient',
+      item: { value },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging()
+      })
+    }));
+  
+    const [, drop] = useDrop(() => ({
+      accept: 'number',
+      drop: (item) => {
+        // Define the expected values for the specific row (rowIndex 2 for the power of 2)
+        const expectedQuart = [1,4,6,4,1];
+
+        // Check if the dropped value is in the expected values
+        if (item.value === expectedQuart[index]) {
+          // Correct coefficient dropped, change color to green
+          setBackgroundColor('green');
+          // Update the equation with the correct value
+          const updatedEquation = [...quart];
+          updatedEquation[index] = item.value;
+          setQuart(updatedEquation);
+        }else {
+          // Incorrect coefficient dropped, do not change color
+          setBackgroundColor('white');
+        }
+      }
+    }));
+  
+    const [backgroundColor, setBackgroundColor] = useState(value === '' ? 'white' : 'green'); // Set the initial color based on value
+  
+    return (
+      <span
+        ref={(node) => {
+          drag(node);
+          drop(node);
+        }}
+        className={`inline-block text-xl font-semibold bg-${backgroundColor}-400 p-2 mx-1`}
+        style={{
+          width: "50px",
+          height: "50px",
+          backgroundColor: isDragging ? 'lightgray' : backgroundColor,
+          border: "1px solid #000",
+        }}
+      >
+        {value !== '' ? value : ''}
+      </span>
+    );
+  };
+
+
+
+
+  
   
   
 
@@ -113,7 +224,17 @@ const BinomialTriangle = () => {
         </div>
         <div className="text-center mt-8">
           <h2 className="text-2xl">
-            (a + b)^2 = <CoefficientBox value={equation[0]} index={0} />a^2 + <CoefficientBox value={equation[1]} index={1} />ab + <CoefficientBox value={equation[2]} index={2} />b^2
+            (a + b)^2 = <SquareCoefficientBox value={square[0]} index={0} />a^2 + <SquareCoefficientBox value={square[1]} index={1} />ab + <SquareCoefficientBox value={square[2]} index={2} />b^2
+          </h2>
+          <br />
+          <br />
+          <h2 className="text-2xl">
+            (a + b)^3 = <CubicCoefficientBox value={cubic[0]} index={0} />a^3 + <CubicCoefficientBox value={cubic[1]} index={1} />a^2b + <CubicCoefficientBox value={cubic[2]} index={2} />ab^2 + <CubicCoefficientBox value={cubic[3]} index={3} />b^3
+          </h2>
+          <br />
+          <br />
+          <h2 className="text-2xl">
+            (a + b)^4 = <QuartCoefficientBox value={quart[0]} index={0} />a^4 + <QuartCoefficientBox value={quart[1]} index={1} />a^3b + <QuartCoefficientBox value={quart[2]} index={2} />a^2b^2+<QuartCoefficientBox value={quart[3]} index={3} />ab^3 + <QuartCoefficientBox value={quart[4]} index={4} />b^4
           </h2>
         </div>
       </div>
