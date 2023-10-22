@@ -102,11 +102,11 @@ const Symmetric = () => {
 
             <span className='font-semibold text-lg'>
               <li>
-                Add the number directly above and to the left of the number with the number above and to the right of it.
+                Drag the number from the green box to its corressponding symmetric place in yellow box.
               </li>
-              <li>
-                If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
-              </li>
+              {/* <li>
+                
+              </li> */}
             </span>
 
           </div>
