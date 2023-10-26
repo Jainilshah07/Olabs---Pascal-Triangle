@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import LevelCompletionModal from './LevelCompletionModal';
 
 const Addition = () => {
   const [rows, setRows] = useState([[1], [1, 1]]);
+  const [count, setCount] = useState(0);
+  const [greenCount, setGreenCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [showStartDialog, setShowStartDialog] = useState(true);
   const [showAddRowDialog, setShowAddRowDialog] = useState(false);
   const [hasShownAddRowDialog, setHasShownAddRowDialog] = useState(false);
@@ -17,6 +21,12 @@ const Addition = () => {
     // Show the start dialog initially
     setShowStartDialog(true);
   }, []);
+
+  useEffect(() => {
+    if(greenCount > 5){
+      setShowModal(true);
+    }
+  }, [greenCount]);
 
   const generateTriangle = () => {
     if (!hasShownAddRowDialog) {
@@ -48,6 +58,7 @@ const Addition = () => {
         updatedRows[rowIndex][colIndex] = existingValue + value;
         // Update the background color state to green
         newColors[rowIndex][colIndex] = 'green';
+        setGreenCount(greenCount+1);
       } else {
         updatedRows[rowIndex][colIndex] = 0;
         newColors[rowIndex][colIndex] = 'yellow';
@@ -63,15 +74,12 @@ const Addition = () => {
   };
 
 
-
-
   const Box = ({ value, rowIndex, colIndex }) => {
     // let backgroundColor = 'yellow';
-    let backgroundColor = boxBackgroundColors[rowIndex][colIndex];
-    console.log(`rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
+    // let backgroundColor = boxBackgroundColors[rowIndex][colIndex];
     if (value === 1 && (colIndex === 0 || colIndex === rowIndex)) {
       boxBackgroundColors[rowIndex][colIndex] = 'green'
-      console.log(backgroundColor)
+      // console.log(backgroundColor)
     }
 
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -121,31 +129,35 @@ const Addition = () => {
     );
   };
 
+  const handleCount = () => {
+    setCount(count+1);
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='grid grid-cols-3 '>
-        <div className='px-4 border-x-8 h-screen items-center'>
-          <h1 className='font-semibold text-2xl pt-2'>Instructions</h1>
+      <div className="text-center text-4xl font-bold py-2">Level 1: Generating Pascal's Triangle using Addition Property</div>
+      <div className='grid grid-cols-3 border-black border-4'>
+        <div className='px-4 col-span-1 border-e-4 border-black h-screen items-center'>
+          <div className='font-semibold text-center text-3xl pt-2'>Instructions</div>
           <br />
           <span className='font-semibold text-lg'>
-            1) Click on the Add Row button to generate a new Row
+            1) Click on the <span className='italic text-xl'>Add Row</span>  button to generate a new row.
             <br />
-            2) To obtain the number for the yellow hexagon
+            2) To obtain the number for the yellow hexagon,
           </span>
 
           <span className='font-semibold text-lg'>
-            <li>
-              Add the number directly above and to the left of the number with the number above and to the right of it.
-            </li>
-            <li>
+          <p className='text-justify'>
+            <li> Add the number directly above and to the left of the number with the number above and to the right of it.</li></p>
+            
+            <p className='text-justify'> <li>
               If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
-            </li>
+            </li> </p>
           </span>
 
         </div>
-        <div>
-          <h1 className='text-center text-4xl mt-6'>Addition Property</h1>
-          <div className="text-center mt-8 ">
+        <div className='col-span-2'>
+          <div className="text-center mt-8">
             {rows.map((row, rowIndex) => (
               <div key={rowIndex}>
                 {row.map((value, colIndex) => (
@@ -153,9 +165,11 @@ const Addition = () => {
                 ))}
               </div>
             ))}
-            <button className="bg-green-200 rounded-full p-2 m-2" onClick={generateTriangle}>
+            <div className=''>
+            <button className="bg-green-200 mx-auto my-4 border-2 border-green-600 text-xl font-medium rounded-full p-2 m-2" onClick = {() =>  {generateTriangle(); handleCount() }} style={{ display: count === 3 ? 'none' : 'block' }}  >
               Add Row
             </button>
+            </div>
           </div>
           {showStartDialog && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -193,11 +207,9 @@ const Addition = () => {
               </div>
             </div>
           )}
+          {showModal && <LevelCompletionModal levelNumber = "1"  />}
         </div>
       </div>
-
-
-
 
     </DndProvider>
 
