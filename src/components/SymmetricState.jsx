@@ -13,6 +13,8 @@ const Symmetric = () => {
   const [count, setCount] = useState(0);
   const [greenCount, setGreenCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showPulledWrongDialog, setShowPulledWrongDialog] = useState(false);
+  const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
 
   useEffect(() => {
     if(greenCount > 5){
@@ -76,6 +78,18 @@ const Symmetric = () => {
           if (rows.length - colIndex - 1 === item.colIndex) {
             handleDrop(rowIndex, colIndex, item.value);
           }
+          else{
+            setShowPulledWrongDialog(true);
+            setTimeout(() => {
+              setShowPulledWrongDialog(false); // Hide wrong number dialog after 3 seconds
+            }, 3000);
+          }
+        }
+        else{
+          setShowWrongAnswerDialog(true); //Added Validation feedback
+          setTimeout(() => {
+            setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 3 seconds
+          }, 3000);
         }
       },
       collect: (monitor) => ({
@@ -106,10 +120,12 @@ const Symmetric = () => {
 
   return (
     <div>
+      {/*  //Level 2ke heading ko andar include karna h */}
       <DndProvider backend={HTML5Backend}>
-      <div className="text-center text-4xl font-bold py-2">Level 2: Generating Pascal's Triangle Using Symmetric Property</div>
-        <div className='grid grid-cols-3 border-black border-4'>
-          <div className='px-4 border-e-4 border-black h-screen items-center'>
+      <div className='grid grid-cols-3 h-screen border-black border-4'>
+      <div className="text-center text-4xl font-bold py-2 col-span-3 border-black border-b-4">Level 2: Generating Pascal's Triangle Using Symmetric Property</div>
+        {/* <div className='grid grid-cols-3 border-black border-4'> */}
+          <div className='px-4 border-e-4 border-black items-center'>
             <h1 className='font-semibold text-center text-3xl pt-2'>Instructions</h1>
             <br />
             <span className='font-semibold text-lg'>
@@ -151,6 +167,24 @@ const Symmetric = () => {
               </button>
             </div>
           </div>
+          {showWrongAnswerDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
+                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
+                <p>Dropped Wrong Value, Use value from same row. Please try again.</p>
+              </div>
+            </div>
+          )}
+          {showPulledWrongDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
+                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
+                <p>Check the dragged value. It should be symmetric.</p>
+              </div>
+            </div>
+          )}
 
           {showModal && <LevelCompletionModal levelNumber = "2" />}
         </div>

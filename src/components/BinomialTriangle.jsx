@@ -18,7 +18,6 @@ const BinomialTriangle = () => {
       [1, 3, 3, 1],
       [1, 4, 6, 4, 1],
       [1, 5, 10, 10, 5, 1],
-      // [1, 6, 15, 20, 15, 6, 1],
     ];
     setRows(premadeTriangle);
   }, []);
@@ -155,6 +154,7 @@ const BinomialTriangle = () => {
         } else {
           // Incorrect coefficient dropped, do not change color
           setBackgroundColor("white");
+
         }
       },
     }));
@@ -210,10 +210,11 @@ const BinomialTriangle = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="text-center text-4xl font-bold py-2">
+      <div className="grid h-screen grid-cols-4 border-4 border-black">
+      <div className="text-center col-span-4 border-b-4 border-black text-4xl font-bold py-2">
         Level 3: Deriving Binomial Coefficient using Pascal Triangle
       </div>
-      <div className="grid h-5/6 grid-cols-4 border-4 border-black">
+      {/* <div className="grid h-5/6 grid-cols-4 border-4 border-black"> */}
         <div className="col-span-1 border-e-4 border-black">
           <div className="px-4 items-center">
             <h1 className="font-semibold text-center text-3xl pt-2">Instructions</h1>

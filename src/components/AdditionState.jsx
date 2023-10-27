@@ -13,6 +13,7 @@ const Addition = () => {
   const [showAddRowDialog, setShowAddRowDialog] = useState(false);
   const [hasShownAddRowDialog, setHasShownAddRowDialog] = useState(false);
   const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
+  const [showPulledWrongDialog, setShowPulledWrongDialog] = useState(false);
   const [boxBackgroundColors, setBoxBackgroundColors] = useState(
     rows.map((row) => row.map(() => 'yellow'))
   );
@@ -66,7 +67,7 @@ const Addition = () => {
         setShowWrongAnswerDialog(true); // Show wrong answer dialog
         setTimeout(() => {
           setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
-        }, 1000);
+        }, 3000);
       }
     }
     setBoxBackgroundColors(newColors);
@@ -79,7 +80,6 @@ const Addition = () => {
     // let backgroundColor = boxBackgroundColors[rowIndex][colIndex];
     if (value === 1 && (colIndex === 0 || colIndex === rowIndex)) {
       boxBackgroundColors[rowIndex][colIndex] = 'green'
-      // console.log(backgroundColor)
     }
 
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -98,6 +98,12 @@ const Addition = () => {
           if (colIndex - 1 === item.colIndex || colIndex === item.colIndex) {
             handleDrop(rowIndex, colIndex, item.value);
           }
+        }
+        else{
+          setShowPulledWrongDialog(true); //did't drop correct number 
+          setTimeout(() => {
+            setShowPulledWrongDialog(false); // Hide wrong answer dialog after 2 seconds
+          }, 4000);
         }
       },
       collect: (monitor) => ({
@@ -135,9 +141,9 @@ const Addition = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="text-center text-4xl font-bold py-2">Level 1: Generating Pascal's Triangle using Addition Property</div>
       <div className='grid grid-cols-3 border-black border-4'>
-        <div className='px-4 col-span-1 border-e-4 border-black h-screen items-center'>
+      <div className="text-center text-4xl col-span-3 border-black border-b-4 font-bold py-2">Level 1: Generating Pascal's Triangle using Addition Property</div>
+        <div className='px-4 col-span-1 pb-[350px] border-e-4 border-black items-center'>
           <div className='font-semibold text-center text-3xl pt-2'>Instructions</div>
           <br />
           <span className='font-semibold text-lg'>
@@ -185,7 +191,10 @@ const Addition = () => {
               </div>
             </div>
           )}
-          {showAddRowDialog && (
+          
+        </div>
+      </div>
+      {showAddRowDialog && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-4 rounded">
                 <h1 className="text-2xl font-bold mb-2">Fill Number</h1>
@@ -203,13 +212,20 @@ const Addition = () => {
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-4 rounded">
                 <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-                <p>The answer you filled is incorrect. Please try again.</p>
+                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
+                <p>Don't Pull same value Twice. Please try again.</p>
+              </div>
+            </div>
+          )}
+          {showPulledWrongDialog && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-4 rounded">
+                <h1 className="text-2xl font-bold mb-2">Wrong Number!</h1>
+                <p>You Did't drop correct value. Please try again by dropping value just above the current yellow box</p>
               </div>
             </div>
           )}
           {showModal && <LevelCompletionModal levelNumber = "1"  />}
-        </div>
-      </div>
 
     </DndProvider>
 

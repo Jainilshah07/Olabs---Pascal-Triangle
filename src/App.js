@@ -2,7 +2,7 @@
 import AdditionState from "./components/AdditionState"
 import SymmetricState from "./components/SymmetricState";
 import BinomialTriangle from "./components/BinomialTriangle";
-import { Route, Routes,  } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import StartPage from "./components/introduction/StartPage";
 
 function App() {
