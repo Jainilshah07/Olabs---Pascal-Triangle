@@ -23,7 +23,7 @@ const Addition = () => {
   }, []);
 
   useEffect(() => {
-    if(greenCount > 5){
+    if (greenCount > 5) {
       setShowModal(true);
     }
   }, [greenCount]);
@@ -58,7 +58,7 @@ const Addition = () => {
         updatedRows[rowIndex][colIndex] = existingValue + value;
         // Update the background color state to green
         newColors[rowIndex][colIndex] = 'green';
-        setGreenCount(greenCount+1);
+        setGreenCount(greenCount + 1);
       } else {
         updatedRows[rowIndex][colIndex] = 0;
         newColors[rowIndex][colIndex] = 'yellow';
@@ -130,7 +130,7 @@ const Addition = () => {
   };
 
   const handleCount = () => {
-    setCount(count+1);
+    setCount(count + 1);
   }
 
   return (
@@ -147,9 +147,9 @@ const Addition = () => {
           </span>
 
           <span className='font-semibold text-lg'>
-          <p className='text-justify'>
-            <li> Add the number directly above and to the left of the number with the number above and to the right of it.</li></p>
-            
+            <p className='text-justify'>
+              <li> Add the number directly above and to the left of the number with the number above and to the right of it.</li></p>
+
             <p className='text-justify'> <li>
               If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
             </li> </p>
@@ -166,9 +166,9 @@ const Addition = () => {
               </div>
             ))}
             <div className=''>
-            <button className="bg-green-200 mx-auto my-4 border-2 border-green-600 text-xl font-medium rounded-full p-2 m-2" onClick = {() =>  {generateTriangle(); handleCount() }} style={{ display: count === 3 ? 'none' : 'block' }}  >
-              Add Row
-            </button>
+              <button className="bg-green-200 mx-auto my-4 border-2 border-green-600 text-xl font-medium rounded-full p-2 m-2" onClick={() => { generateTriangle(); handleCount() }} style={{ display: count === 3 ? 'none' : 'block' }}  >
+                Add Row
+              </button>
             </div>
           </div>
           {showStartDialog && (
@@ -207,7 +207,7 @@ const Addition = () => {
               </div>
             </div>
           )}
-          {showModal && <LevelCompletionModal levelNumber = "1"  />}
+          {showModal && <LevelCompletionModal levelNumber="1" />}
         </div>
       </div>
 
