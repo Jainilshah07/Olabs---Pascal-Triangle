@@ -220,21 +220,12 @@ const BinomialTriangle = () => {
             <h1 className="font-semibold text-center text-3xl pt-2">Instructions</h1>
             <br />
             <span className="font-semibold text-lg">
-              1) Click on the <span className='italic text-xl'>Add Row</span> button to generate a new row.
+              1) n represents the value of the binomial equation's power.
               <br />
-              2) To obtain the number for the yellow hexagon,
+              2) Drag and drop the Pascal triangle's (n+1)th row's components into the matching equations.
             </span>
 
-            <span className="font-semibold text-lg">
-              <li>
-                Add the number directly above and to the left of the number with
-                the number above and to the right of it.
-              </li>
-              {/* <li>
-                If there are no numbers on the left or right side, replace a
-                zero for that missing number and proceed with the addition
-              </li> */}
-            </span>
+
           </div>
         </div>
         <div className="col-span-3 border-b-4 border-black">
@@ -254,21 +245,21 @@ const BinomialTriangle = () => {
 
         </div>
         <div className="col-span-3">
-        <div className="text-center font-semibold my-2">
-          <h2 className="text-2xl">
-            (a + b)<sup>2</sup> = <SquareCoefficientBox value={square[0]} index={0} />a<sup>2</sup> + <SquareCoefficientBox value={square[1]} index={1} />ab + <SquareCoefficientBox value={square[2]} index={2} />b<sup>2</sup> 
-          </h2>
-          <br />
-          <br />
-          <h2 className="text-2xl">
-            (a + b)<sup>3</sup> = <CubicCoefficientBox value={cubic[0]} index={0} />a<sup>3</sup> + <CubicCoefficientBox value={cubic[1]} index={1} />a<sup>2</sup> b + <CubicCoefficientBox value={cubic[2]} index={2} />ab<sup>2</sup>  + <CubicCoefficientBox value={cubic[3]} index={3} />b<sup>3</sup> 
-          </h2>
-          <br />
-          <br />
-          <h2 className="text-2xl">
-            (a + b) <sup>4</sup> = <QuartCoefficientBox value={quart[0]} index={0} />a<sup>4</sup> + <QuartCoefficientBox value={quart[1]} index={1} />a<sup>3</sup> b + <QuartCoefficientBox value={quart[2]} index={2} />a<sup>2</sup> b<sup>2</sup> +<QuartCoefficientBox value={quart[3]} index={3} />ab<sup>3</sup>  + <QuartCoefficientBox value={quart[4]} index={4} />b<sup>4</sup> 
-          </h2>
-        </div>
+          <div className="text-center font-semibold my-2">
+            <h2 className="text-2xl">
+              (a + b)<sup>2</sup> = <SquareCoefficientBox value={square[0]} index={0} />a<sup>2</sup> + <SquareCoefficientBox value={square[1]} index={1} />ab + <SquareCoefficientBox value={square[2]} index={2} />b<sup>2</sup>
+            </h2>
+            <br />
+            <br />
+            <h2 className="text-2xl">
+              (a + b)<sup>3</sup> = <CubicCoefficientBox value={cubic[0]} index={0} />a<sup>3</sup> + <CubicCoefficientBox value={cubic[1]} index={1} />a<sup>2</sup> b + <CubicCoefficientBox value={cubic[2]} index={2} />ab<sup>2</sup>  + <CubicCoefficientBox value={cubic[3]} index={3} />b<sup>3</sup>
+            </h2>
+            <br />
+            <br />
+            <h2 className="text-2xl">
+              (a + b) <sup>4</sup> = <QuartCoefficientBox value={quart[0]} index={0} />a<sup>4</sup> + <QuartCoefficientBox value={quart[1]} index={1} />a<sup>3</sup> b + <QuartCoefficientBox value={quart[2]} index={2} />a<sup>2</sup> b<sup>2</sup> +<QuartCoefficientBox value={quart[3]} index={3} />ab<sup>3</sup>  + <QuartCoefficientBox value={quart[4]} index={4} />b<sup>4</sup>
+            </h2>
+          </div>
         </div>
       </div>
     </DndProvider>

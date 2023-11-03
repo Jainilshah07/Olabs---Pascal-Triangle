@@ -17,7 +17,7 @@ const Symmetric = () => {
   const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
 
   useEffect(() => {
-    if(greenCount > 5){
+    if (greenCount > 5) {
       setShowModal(true);
     }
   }, [greenCount]);
@@ -49,14 +49,21 @@ const Symmetric = () => {
       const newColors = [...boxBackgroundColors];
       newColors[rowIndex][colIndex] = 'green';
       setBoxBackgroundColors(newColors);
-      setGreenCount(greenCount+1);
+      setGreenCount(greenCount + 1);
+    }
+    else {
+
+      setShowWrongAnswerDialog(true); // Show wrong answer dialog
+      setTimeout(() => {
+        setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
+      }, 1000);
     }
 
     setRows(updatedRows);
   };
 
   const handleCount = () => {
-    setCount(count+1);
+    setCount(count + 1);
   }
 
   const Box = ({ value, rowIndex, colIndex }) => {
@@ -98,7 +105,7 @@ const Symmetric = () => {
       }),
     }));
 
-  
+
 
     return (
       <span
@@ -129,7 +136,7 @@ const Symmetric = () => {
             <h1 className='font-semibold text-center text-3xl pt-2'>Instructions</h1>
             <br />
             <span className='font-semibold text-lg'>
-            <p className='text-justify'> 1) Click on the Add Row button to generate a new Row.</p>
+              <p className='text-justify'> 1) Click on the Add Row button to generate a new Row.</p>
               <br />
               <p className='text-justify'> 2) The center is the number "1" in the top row. In an odd-numbered row, the center is a single number, while in an even-numbered row, it consists of two equal numbers.</p>
               <br />
@@ -139,13 +146,13 @@ const Symmetric = () => {
             </span>
 
             <span className='font-semibold text-lg'>
-            <p className='text-justify'> <li>
+              <p className='text-justify'> <li>
                 Drag a number from the left side and drop it in the yellow hexagon so that it creates a mirror image.
               </li></p>
             </span>
 
             <span className='font-semibold text-lg'>
-            <p className='text-justify'><li> 
+              <p className='text-justify'><li>
                 Drag the number from the green box to its corressponding symmetric place in yellow box.
               </li> </p>
             </span>
@@ -160,8 +167,8 @@ const Symmetric = () => {
                   ))}
                 </div>
               ))}
-              <button className='bg-green-200 mx-auto my-4 border-2 border-green-600 text-xl font-medium rounded-full p-2 m-2' 
-                onClick = {() =>  {generateTriangle(); handleCount() }} 
+              <button className='bg-green-200 mx-auto my-4 border-2 border-green-600 text-xl font-medium rounded-full p-2 m-2'
+                onClick={() => { generateTriangle(); handleCount() }}
                 style={{ display: count === 4 ? 'none' : 'block' }}  >
                 Add Row
               </button>
@@ -186,9 +193,9 @@ const Symmetric = () => {
             </div>
           )}
 
-          {showModal && <LevelCompletionModal levelNumber = "2" />}
+          {showModal && <LevelCompletionModal levelNumber="2" />}
         </div>
-        
+
 
       </DndProvider>
     </div>
