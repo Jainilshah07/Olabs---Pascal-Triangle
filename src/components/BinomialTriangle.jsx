@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useDrop, useDrag } from "react-dnd";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Link } from 'react-router-dom'
 
 const BinomialTriangle = () => {
   const [rows, setRows] = useState([]); // Initialize an empty triangle
   const [square, setSquare] = useState(["", "", ""]);
   const [cubic, setCubic] = useState(["", "", "", ""]);
   const [quart, setQuart] = useState(["", "", "", "", ""]);
+  const [greenCount, setGreenCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (greenCount > 11) {
+      setShowModal(true);
+    }
+  }, [greenCount]);
 
   useEffect(() => {
     // Create a premade binomial triangle with 7 rows
@@ -41,6 +50,7 @@ const BinomialTriangle = () => {
         if (item.value === expectedValues[index]) {
           // Correct coefficient dropped, change color to green
           setBackgroundColor("green");
+          setGreenCount(greenCount+1);
           // Update the equation with the correct value
           const updatedEquation = [...square];
           updatedEquation[index] = item.value;
@@ -94,6 +104,7 @@ const BinomialTriangle = () => {
         if (item.value === expectedCubic[index]) {
           // Correct coefficient dropped, change color to green
           setBackgroundColor("green");
+          setGreenCount(greenCount+1);
           // Update the equation with the correct value
           const updatedEquation = [...cubic];
           updatedEquation[index] = item.value;
@@ -147,6 +158,7 @@ const BinomialTriangle = () => {
         if (item.value === expectedQuart[index]) {
           // Correct coefficient dropped, change color to green
           setBackgroundColor("green");
+          setGreenCount(greenCount+1);
           // Update the equation with the correct value
           const updatedEquation = [...quart];
           updatedEquation[index] = item.value;
@@ -220,9 +232,9 @@ const BinomialTriangle = () => {
             <h1 className="font-semibold text-center text-3xl pt-2">Instructions</h1>
             <br />
             <span className="font-semibold text-lg">
-              1) n represents the value of the binomial equation's power.
+              <p className="text-justify">1) n represents the value of the binomial equation's power.</p> 
               <br />
-              2) Drag and drop the Pascal triangle's (n+1)th row's components into the matching equations.
+              <p className="text-justify"> 2) Drag and drop the Pascal triangle's (n+1)<sup>th</sup> row's components into the matching equations.</p>
             </span>
 
 
@@ -261,7 +273,21 @@ const BinomialTriangle = () => {
             </h2>
           </div>
         </div>
+        {showModal && <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-4 rounded">
+        <h1 className="text-2xl font-bold mb-2">Welcome!</h1>
+        <p>
+          You have successfully completed Level-3.
+        </p>
+        <Link to={`/thank-you`}><button
+          className="bg-green-200 rounded-full p-2 mt-4"
+        >
+          Let's Proceed
+        </button></Link>
       </div>
+    </div> }
+      </div>
+
     </DndProvider>
   );
 };
