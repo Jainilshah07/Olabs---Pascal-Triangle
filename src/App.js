@@ -5,6 +5,7 @@ import BinomialTriangle from "./components/BinomialTriangle";
 import { Route, Routes } from "react-router-dom";
 import StartPage from "./components/introduction/StartPage";
 import Intro from "./components/introduction/Intro";
+import ThankYou from "./components/introduction/ThankYou";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/level-1" element={<AdditionState />} ></Route>
         <Route path="/level-2" element={<SymmetricState />} ></Route>
         <Route path="/level-3" element={<BinomialTriangle/>} ></Route>
+        <Route path="/thank-you" element={<ThankYou />} ></Route>
         </Routes>
     </div>
   );
