@@ -30,7 +30,7 @@ to find <br />  the binomial coefficients of a <br /> positive integral.</p>
         </p>
 
         <div className="flex flex-col items-center mt-4">
-      <Link to={'/level-1'}><button className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded">
+      <Link to={'/start'}><button className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded">
         Let's Start
       </button></Link> 
       </div>

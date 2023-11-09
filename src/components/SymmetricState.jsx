@@ -3,9 +3,9 @@ import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LevelCompletionModal from './LevelCompletionModal';
+import Modal from './Modal';
 
 const Symmetric = () => {
-  // const [rows, setRows] = useState([[1], [1, 1]]);
   const [rows, setRows] = useState([[1]]);
   const [boxBackgroundColors, setBoxBackgroundColors] = useState(
     rows.map((row) => row.map(() => 'yellow'))
@@ -39,13 +39,6 @@ const Symmetric = () => {
 
     if (existingValue === 0) {
       updatedRows[rowIndex][colIndex] = value;
-      //   if (colIndex > rows.length / 2) {
-      //     console.log("entry")
-      //     // Update the background color state to green
-      //     const newColors = [...boxBackgroundColors];
-      //     newColors[rowIndex][colIndex] = 'green';
-      //     setBoxBackgroundColors(newColors);
-      //   }
       const newColors = [...boxBackgroundColors];
       newColors[rowIndex][colIndex] = 'green';
       setBoxBackgroundColors(newColors);
@@ -54,9 +47,6 @@ const Symmetric = () => {
     else {
 
       setShowWrongAnswerDialog(true); // Show wrong answer dialog
-      setTimeout(() => {
-        setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
-      }, 1000);
     }
 
     setRows(updatedRows);
@@ -87,9 +77,6 @@ const Symmetric = () => {
           }
           else{
             setShowPulledWrongDialog(true);
-            setTimeout(() => {
-              setShowPulledWrongDialog(false); // Hide wrong number dialog after 3 seconds
-            }, 3000);
           }
         }
         else{
@@ -175,22 +162,14 @@ const Symmetric = () => {
             </div>
           </div>
           {showWrongAnswerDialog && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded">
-                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
-                <p>Dropped Wrong Value, Use value from same row. Please try again.</p>
-              </div>
-            </div>
+              <Modal title="Wrong Answer" 
+              desc1="Please try again."  
+              desc2="Dropped Wrong Value, Use value from same row." />
           )}
           {showPulledWrongDialog && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded">
-                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
-                <p>Check the dragged value. It should be symmetric.</p>
-              </div>
-            </div>
+                <Modal title="Wrong Answer" 
+              desc1="Please Try Again."  
+              desc2="Check the dragged value. It should be symmetric. " />
           )}
 
           {showModal && <LevelCompletionModal levelNumber="2" />}

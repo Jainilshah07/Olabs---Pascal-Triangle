@@ -3,6 +3,7 @@ import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LevelCompletionModal from './LevelCompletionModal';
+import Modal from './Modal';
 
 const Addition = () => {
   const [rows, setRows] = useState([[1], [1, 1]]);
@@ -13,6 +14,7 @@ const Addition = () => {
   const [showAddRowDialog, setShowAddRowDialog] = useState(false);
   const [hasShownAddRowDialog, setHasShownAddRowDialog] = useState(false);
   const [showWrongAnswerDialog, setShowWrongAnswerDialog] = useState(false);
+  const [showWrongRow, setShowWrongRow] = useState(false);
   const [showPulledWrongDialog, setShowPulledWrongDialog] = useState(false);
   const [boxBackgroundColors, setBoxBackgroundColors] = useState(
     rows.map((row) => row.map(() => 'yellow'))
@@ -55,19 +57,21 @@ const Addition = () => {
       updatedRows[rowIndex][colIndex] = value;
     } else {
       if (existingValue + value === updatedRows[rowIndex - 1][colIndex - 1] + updatedRows[rowIndex - 1][colIndex]) {
-        // Match found, set the background color to green
+          // Match found, set the background color to green
         updatedRows[rowIndex][colIndex] = existingValue + value;
         // Update the background color state to green
         newColors[rowIndex][colIndex] = 'green';
         setGreenCount(greenCount + 1);
+        // }, 3000);
+        
       } else {
         updatedRows[rowIndex][colIndex] = 0;
         newColors[rowIndex][colIndex] = 'yellow';
 
         setShowWrongAnswerDialog(true); // Show wrong answer dialog
-        setTimeout(() => {
-          setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds
-        }, 3000);
+        // setTimeout(() => {
+        //   setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds// pulled twice
+        // }, 3000);
       }
     }
     setBoxBackgroundColors(newColors);
@@ -98,13 +102,21 @@ const Addition = () => {
           if (colIndex - 1 === item.colIndex || colIndex === item.colIndex) {
             handleDrop(rowIndex, colIndex, item.value);
           }
+          else{
+            setShowPulledWrongDialog(true); //did't drop correct number 
+            // setTimeout(() => {
+            //   setShowPulledWrongDialog(false); // Hide wrong answer dialog after 2 seconds
+            // }, 3000);
+          }
+          // If idhar 2 if's se kiya toh 1 wala validation hojayega
         }
         else{
-          setShowPulledWrongDialog(true); //did't drop correct number 
-          setTimeout(() => {
-            setShowPulledWrongDialog(false); // Hide wrong answer dialog after 2 seconds
-          }, 4000);
+          setShowWrongRow(true);
+          // setTimeout(() => {
+          //   setShowWrongRow(false); // Hide wrong answer dialog after 2 seconds
+          // }, 3000);
         }
+        
       },
       collect: (monitor) => ({
         canDrop: monitor.canDrop(),
@@ -121,7 +133,7 @@ const Addition = () => {
         ref={(node) => {
           drag(drop(node));
         }}
-        className={`inline-block text-xl font-semibold bg-${boxBackgroundColors[rowIndex][colIndex]}-400 p-2 mx-1`}
+        className={`transition-colors duration-300 ease-in-out inline-block text-xl font-semibold bg-${boxBackgroundColors[rowIndex][colIndex]}-400 p-2 mx-1`}
         style={{
           clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
           width: "50px", // Adjust the width and height to your desired size
@@ -194,7 +206,7 @@ const Addition = () => {
           
         </div>
       </div>
-      {showAddRowDialog && (
+          {showAddRowDialog && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-4 rounded">
                 <h1 className="text-2xl font-bold mb-2">Fill Number</h1>
@@ -208,23 +220,18 @@ const Addition = () => {
               </div>
             </div>
           )}
-          {showWrongAnswerDialog && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded">
-                <h1 className="text-2xl font-bold mb-2">Wrong Answer!</h1>
-                {/* <p>The answer you filled is incorrect. Please try again.</p> */}
-                <p>Don't Pull same value Twice. Please try again.</p>
-              </div>
-            </div>
+          {showWrongAnswerDialog && 
+              <Modal title="Wrong Answer" 
+            desc1="Please try again."  
+            desc2="Don't Pull same value Twice." />}
+          {showWrongRow && (
+            <Modal title="Wrong Answer" 
+            desc1="Please try again."  
+            desc2="Pull value from the row just above yellow box." />
           )}
-          {showPulledWrongDialog && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-4 rounded">
-                <h1 className="text-2xl font-bold mb-2">Wrong Number!</h1>
-                <p>You Did't drop correct value. Please try again by dropping value just above the current yellow box</p>
-              </div>
-            </div>
-          )}
+          { showPulledWrongDialog && <Modal title="Wrong Number" 
+              desc1="You Did't drop correct value."  
+              desc2="Please try again by dropping value just above the current yellow box." /> }
           {showModal && <LevelCompletionModal levelNumber = "1"  />}
     </DndProvider>
 
