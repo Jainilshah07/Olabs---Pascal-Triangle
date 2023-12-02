@@ -1,5 +1,5 @@
 import React from "react";
-import background from "../../assets/mathBackground.svg";
+import background from "../../assets/Background.png";
 import { Link } from "react-router-dom";
 
 const StartPage = () => {
@@ -13,8 +13,8 @@ const StartPage = () => {
         backgroundSize: 'cover',
       }}
     >
-      <p className="text-slate-300 font-bold text-2xl text-center pt-72">
-        <p className="text-slate-300 font-bold text-3xl py-2"> Objective</p>
+      <p className="text-black-300 font-bold text-2xl text-center pt-72">
+        <p className="text-black-300 font-bold text-3xl py-2"> Objective</p>
         To Derive Binomial Coefficients using Pascal's Triangle
       </p>
       <div className="flex flex-col items-center mt-4">
