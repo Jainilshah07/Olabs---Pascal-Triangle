@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LevelCompletionModal from './LevelCompletionModal';
 import Modal from './Modal';
+import LevelContext from './GameContext';
+import ErrorPage from './introduction/ErrorPage';
 
 const Symmetric = () => {
   const [rows, setRows] = useState([[1]]);
+  const context = useContext(LevelContext);
+  const {level1} = context; //Destructuring 
   const [boxBackgroundColors, setBoxBackgroundColors] = useState(
     rows.map((row) => row.map(() => 'yellow'))
   );
@@ -115,33 +119,38 @@ const Symmetric = () => {
   return (
     <div>
       {/*  //Level 2ke heading ko andar include karna h */}
+      {level1 ? 
       <DndProvider backend={HTML5Backend}>
       <div className='grid grid-cols-3 h-screen border-black border-4'>
       <div className="text-center text-4xl font-bold py-2 col-span-3 border-black border-b-4">Level 2: Generating Pascal's Triangle Using Symmetric Property</div>
         {/* <div className='grid grid-cols-3 border-black border-4'> */}
           <div className='px-4 border-e-4 border-black items-center'>
-            <h1 className='font-semibold text-center text-3xl pt-2'>Instructions</h1>
-            <br />
+            <h1 className='font-semibold text-center text-3xl mb-3 pt-2'>Instructions</h1>
+            {/* <br /> */}
             <span className='font-semibold text-lg'>
-              <p className='text-justify'> 1) Click on the Add Row button to generate a new Row.</p>
-              <br />
-              <p className='text-justify'> 2) The center is the number "1" in the top row. In an odd-numbered row, the center is a single number, while in an even-numbered row, it consists of two equal numbers.</p>
-              <br />
-              <p className='text-justify'>3) The symmetric property of Pascal's Triangle means that if you draw a vertical line through the center of the triangle, the numbers on the left side mirror the numbers on the right side. This creates a symmetrical pattern.</p>
-              <br />
-              <p className='text-justify'>4) To obtain the number for the yellow hexagon,</p>
+              <p className='text-justify mb-4'> 1) Click on the Add Row button to generate a new Row.</p>
+              {/* <br /> */}
+              <p className='text-justify  mb-4'> 2) In an odd-numbered row, the center is a single number, while in an even-numbered row, it consists of two equal numbers. The center is crucial for creating symmetry.</p>
+              {/* <br /> */}
+              <p className='text-justify  mb-4'>3) Draw an imaginary vertical line through the center of the triangle. Notice how the numbers on the left side mirror the numbers on the right side.</p>
+              {/* <br /> */}
+              <p className='text-justify  mb-4'>4) To obtain the number for the yellow hexagon:</p>
             </span>
 
-            <span className='font-semibold text-lg'>
+            <span className='font-semibold text-gray-800 text-lg'>
               <p className='text-justify'> <li>
-                Drag a number from the left side and drop it in the yellow hexagon so that it creates a mirror image.
+              Drag a number from the left side and drop it into the yellow hexagon. Observe how it forms a mirror image on the right side. Ensure the symmetry is maintained throughout the process.
               </li></p>
-            </span>
+
 
             <span className='font-semibold text-lg'>
+              {/* <p className='text-justify'><li>
+              For an even-numbered row, drag the number from the green box to its corresponding symmetric place in the yellow box. 
+              </li> </p> */}
               <p className='text-justify'><li>
-                Drag the number from the green box to its corressponding symmetric place in yellow box.
+              When the correct number is dropped, the color of the yellow hexagon will change from yellow to green.
               </li> </p>
+            </span>
             </span>
 
           </div>
@@ -164,19 +173,20 @@ const Symmetric = () => {
           {showWrongAnswerDialog && (
               <Modal title="Wrong Answer" 
               desc1="Please try again."  
-              desc2="Dropped Wrong Value, Use value from same row." />
+              desc2="Dropped Wrong Value, Use value from same row."
+              onClose={() => setShowWrongAnswerDialog(false)} />
           )}
           {showPulledWrongDialog && (
                 <Modal title="Wrong Answer" 
               desc1="Please Try Again."  
-              desc2="Check the dragged value. It should be symmetric. " />
+              desc2="Check the dragged value. It should be symmetric. "
+              onClose={() => setShowPulledWrongDialog(false)} />
           )}
 
           {showModal && <LevelCompletionModal levelNumber="2" />}
         </div>
-
-
       </DndProvider>
+       : <ErrorPage title="2 : Symmetric State" level ="2" /> }
     </div>
   );
 };

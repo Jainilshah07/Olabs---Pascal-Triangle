@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDrop, useDrag } from "react-dnd";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Link } from 'react-router-dom'
+import Modal from "./Modal";
+import LevelContext from './GameContext';
+import ErrorPage from './introduction/ErrorPage';
 
 const BinomialTriangle = () => {
   const [rows, setRows] = useState([]); // Initialize an empty triangle
+  const context = useContext(LevelContext);
+  const {level2} = context; //Destructuring 
   const [square, setSquare] = useState(["", "", ""]);
   const [cubic, setCubic] = useState(["", "", "", ""]);
   const [quart, setQuart] = useState(["", "", "", "", ""]);
   const [greenCount, setGreenCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [wrongQuadValue, setWrongQuadValue] = useState(false);
+  const [wrongSquareValue, setWrongSquareValue] = useState(false);
+  const [wrongCubeValue, setWrongCubeValue] = useState(false);
 
   useEffect(() => {
     if (greenCount > 11) {
@@ -56,6 +64,7 @@ const BinomialTriangle = () => {
           updatedEquation[index] = item.value;
           setSquare(updatedEquation);
         } else {
+          setWrongSquareValue(true);
           // Incorrect coefficient dropped, do not change color
           setBackgroundColor("white");
         }
@@ -112,6 +121,7 @@ const BinomialTriangle = () => {
         } else {
           // Incorrect coefficient dropped, do not change color
           setBackgroundColor("white");
+          setWrongCubeValue(true);
         }
       },
     }));
@@ -164,9 +174,9 @@ const BinomialTriangle = () => {
           updatedEquation[index] = item.value;
           setQuart(updatedEquation);
         } else {
+          setWrongQuadValue(true);
           // Incorrect coefficient dropped, do not change color
           setBackgroundColor("white");
-
         }
       },
     }));
@@ -221,6 +231,7 @@ const BinomialTriangle = () => {
   };
 
   return (
+    <> {level2? 
     <DndProvider backend={HTML5Backend}>
       <div className="grid h-screen grid-cols-4 border-4 border-black">
       <div className="text-center col-span-4 border-b-4 border-black text-4xl font-bold py-2">
@@ -229,12 +240,16 @@ const BinomialTriangle = () => {
       {/* <div className="grid h-5/6 grid-cols-4 border-4 border-black"> */}
         <div className="col-span-1 border-e-4 border-black">
           <div className="px-4 items-center">
-            <h1 className="font-semibold text-center text-3xl pt-2">Instructions</h1>
-            <br />
+            <h1 className="font-semibold text-center text-3xl py-2">Instructions</h1>
             <span className="font-semibold text-lg">
-              <p className="text-justify">1) n represents the value of the binomial equation's power.</p> 
+              <p className="text-justify">1) 'n' signifies the power of the binomial equation.</p> 
               <br />
-              <p className="text-justify"> 2) Drag and drop the Pascal triangle's (n+1)<sup>th</sup> row's components into the matching equations.</p>
+              <p className="text-justify">2) Drag and drop (n+1)<sup className="text-base">th</sup>  row elements of Pascal's Triangle into equations with matching powers.</p>
+              <br />
+              <p className="text-justify">3) Use Pascal's Triangle to find coefficients.</p>
+              
+              
+            
             </span>
 
 
@@ -286,9 +301,29 @@ const BinomialTriangle = () => {
         </button></Link>
       </div>
     </div> }
+    {wrongQuadValue && <Modal title="Wrong Number"
+      desc1="Please try again."
+      desc2="Drag correct Value from the 4th Row"
+      onClose={() => setWrongQuadValue(false)}
+       />}
+    {wrongSquareValue && <Modal title="Wrong Number"
+      desc1="Please try again."
+      desc2="Drag correct Value from the 2nd Row"
+      onClose={() => setWrongSquareValue(false)}
+       />}
+    {wrongCubeValue && <Modal title="Wrong Number"
+      desc1="Please try again."
+      desc2="Drag correct Value from the 3rd Row"
+      onClose={() => setWrongCubeValue(false)}
+       />}
+
+
+    
       </div>
 
     </DndProvider>
+    : <ErrorPage title="3 : Symmetric State" level ="2" />}
+    </>
   );
 };
 

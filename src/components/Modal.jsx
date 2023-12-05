@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
 
 const Modal = (props) => {
-    const title = props.title;
-    const desc1 = props.desc1;
-    const desc2 = props.desc2;
+    // const title = props.title;
+    // const desc1 = props.desc1;
+    // const desc2 = props.desc2;
+    const { title, desc1, desc2, onClose } = props;
+
     const [showModal, setShowModal] = useState(true);
     return (
         <>
@@ -29,7 +31,7 @@ const Modal = (props) => {
                         </div>
                     </div>
                     <div className=" px-4 pb-2 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" onClick={() => setShowModal(false)} className="inline-flex w-full justify-center rounded-md bg-green-300 px-3 py-2 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-400 sm:mt-0 sm:w-auto">Cancel</button>
+                        <button type="button" onClick={() => {setShowModal(false); onClose(); }} className="inline-flex w-full justify-center rounded-md bg-green-300 px-3 py-2 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-400 sm:mt-0 sm:w-auto">Cancel</button>
                     </div>
                 </div>
             </div>

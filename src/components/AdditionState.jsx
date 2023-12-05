@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LevelCompletionModal from './LevelCompletionModal';
 import Modal from './Modal';
+import LevelContext from './GameContext';
 
 const Addition = () => {
+  const context = useContext(LevelContext);
+  const {level1} = context; //Destructuring 
+  // console.log(level1);
   const [rows, setRows] = useState([[1], [1, 1]]);
   const [count, setCount] = useState(0);
   const [greenCount, setGreenCount] = useState(0);
@@ -69,9 +73,6 @@ const Addition = () => {
         newColors[rowIndex][colIndex] = 'yellow';
 
         setShowWrongAnswerDialog(true); // Show wrong answer dialog
-        // setTimeout(() => {
-        //   setShowWrongAnswerDialog(false); // Hide wrong answer dialog after 2 seconds// pulled twice
-        // }, 3000);
       }
     }
     setBoxBackgroundColors(newColors);
@@ -158,19 +159,22 @@ const Addition = () => {
         <div className='px-4 col-span-1 pb-[350px] border-e-4 border-black items-center'>
           <div className='font-semibold text-center text-3xl pt-2'>Instructions</div>
           <br />
-          <span className='font-semibold text-lg'>
+          <p className='font-semibold text-lg'>
             1) Click on the <span className='italic text-xl'>Add Row</span>  button to generate a new row.
             <br />
             2) To obtain the number for the yellow hexagon,
-          </span>
+          </p>
 
-          <span className='font-semibold text-lg'>
+          <span className='font-semibold text-gray-800 text-lg'>
             <p className='text-justify'>
-              <li> Add the number directly above and to the left of the number with the number above and to the right of it.</li></p>
+              <li> Drag and drop the values from the numbers directly above and to the left, as well as the number directly above and to the right of the yellow hexagon.</li></p>
 
+            {/* <p className='text-justify'> <li>
+            If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition.
+              </li> </p> */}
             <p className='text-justify'> <li>
-              If there are no numbers on the left or right side, replace a zero for that missing number and proceed with the addition
-            </li> </p>
+            Once you have correctly added the values, the color of the hexagon will change from yellow to green.
+              </li> </p>
           </span>
 
         </div>
@@ -223,15 +227,18 @@ const Addition = () => {
           {showWrongAnswerDialog && 
               <Modal title="Wrong Answer" 
             desc1="Please try again."  
-            desc2="Don't Pull same value Twice." />}
+            desc2="Don't Pull same value Twice."
+            onClose={() => setShowWrongAnswerDialog(false)} />}
           {showWrongRow && (
             <Modal title="Wrong Answer" 
             desc1="Please try again."  
-            desc2="Pull value from the row just above yellow box." />
+            desc2="Pull value from the row just above yellow box." 
+            onClose={() => setShowWrongRow(false)} />
           )}
           { showPulledWrongDialog && <Modal title="Wrong Number" 
               desc1="You Did't drop correct value."  
-              desc2="Please try again by dropping value just above the current yellow box." /> }
+              desc2="Please try again by dropping value just above the current yellow box."
+              onClose={() => setShowWrongRow(false)} /> }
           {showModal && <LevelCompletionModal levelNumber = "1"  />}
     </DndProvider>
 
